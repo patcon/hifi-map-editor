@@ -41,14 +41,6 @@
       transformation: new L.Transformation(1,0,1,0)
     });
 
-    var map = L.map('map', {
-      crs: CRSPixel,
-      editable: true,
-      // Zoom level 7 is inconsistent: sometimes grays out near edge of image.
-      maxZoom: 6,
-      minZoom: 3
-    });
-
     // Convert y,x of latlon to x,y of cartesian grid.
     var yx = L.latLng;
 
@@ -59,25 +51,30 @@
       return yx(y, x);  // When doing xy(x, y);
     };
 
+    var map = L.map('map', {
+      crs: CRSPixel,
+      editable: true,
+      // Zoom level 7 is inconsistent: sometimes grays out near edge of image.
+      maxZoom: 6,
+      minZoom: 3
+    });
+    map.setView(xy(21.5, 21.5), 6);
+
     var bounds = [xy(0, 0), xy(43.00, 43.00)];
     var mapUrl = 'https://hifi-json.s3.amazonaws.com/Speakeasy-BG-default-70m.jpg';
     // TODO: Uncomment later when using remote images.
     //var image = L.imageOverlay(mapUrl, bounds).addTo(map);
     var image = L.imageOverlay('Speakeasy-BG-default-70m.jpg', bounds).addTo(map);
 
-    var redRoom     = xy(12.01, 27.30);
-    var fancyDinner = xy(25.02, 34.57);
-    var couchIsland = xy(20.83, 16.74);
-    var pianoBar    = xy(15.08, 15.99);
+    var redRoomXY     = xy(12.01, 27.30);
+    var fancyDinnerXY = xy(25.02, 34.57);
+    var couchIslandXY = xy(20.83, 16.74);
+    var pianoBarXY    = xy(15.08, 15.99);
 
-    L.marker(    redRoom).addTo(map).bindPopup('Red Room');
-    L.marker(fancyDinner).addTo(map).bindPopup('Fancy Dinner');
-    L.marker(couchIsland).addTo(map).bindPopup('Couch Island');
-    L.marker(   pianoBar).addTo(map).bindPopup('Piano Bar');
-
-    var travel = L.polyline([redRoom, couchIsland]).addTo(map);
-
-    map.setView(xy(21.5, 21.5), 6);
+    L.marker(    redRoomXY).addTo(map).bindPopup('Red Room').enableEdit();
+    L.marker(fancyDinnerXY).addTo(map).bindPopup('Fancy Dinner').enableEdit();
+    L.marker(couchIslandXY).addTo(map).bindPopup('Couch Island').enableEdit();
+    L.marker(   pianoBarXY).addTo(map).bindPopup('Piano Bar').enableEdit();
 
     // Add map editor controls.
     // Source: http://leaflet.github.io/Leaflet.Editable/example/index.html
