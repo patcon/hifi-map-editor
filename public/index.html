@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet-editable@1.2.0/src/Leaflet.Editable.js"></script>
 
 	<style>
 		html, body {
@@ -35,10 +36,12 @@
 
     var map = L.map('map', {
       crs: CRSPixel,
+      editable: true,
       maxZoom: 7,
       minZoom: 3
     });
 
+    // Convert y,x of latlon to x,y of cartesian grid.
     var yx = L.latLng;
 
     var xy = function(x, y) {
@@ -64,6 +67,44 @@
     var travel = L.polyline([redRoom, couchIsland]).addTo(map);
 
     map.setView(xy(21.5, 21.5), 6);
+
+    // Add map editor controls.
+    // Source: http://leaflet.github.io/Leaflet.Editable/example/index.html
+    // See: https://github.com/Leaflet/Leaflet.Editable#examples
+    L.EditControl = L.Control.extend({
+      options: {
+        position: 'topleft',
+        callback: null,
+        kind: '',
+        html: ''
+      },
+
+      onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control leaflet-bar'),
+          link = L.DomUtil.create('a', '', container);
+
+        link.href = '#';
+        link.title = 'Create a new ' + this.options.kind;
+        link.innerHTML = this.options.html;
+        L.DomEvent.on(link, 'click', L.DomEvent.stop)
+                  .on(link, 'click', function () {
+                    window.LAYER = this.options.callback.call(map.editTools);
+                  }, this);
+
+        return container;
+      }
+    });
+
+    L.NewMarkerControl = L.EditControl.extend({
+      options: {
+          position: 'topleft',
+          callback: map.editTools.startMarker,
+          kind: 'marker',
+          html: '⚐'
+      }
+    });
+
+    map.addControl(new L.NewMarkerControl());
   </script>
 </body>
 </html>
