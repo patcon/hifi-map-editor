@@ -37,7 +37,8 @@
     var map = L.map('map', {
       crs: CRSPixel,
       editable: true,
-      maxZoom: 7,
+      // Zoom level 7 is inconsistent: sometimes grays out near edge of image.
+      maxZoom: 6,
       minZoom: 3
     });
 
