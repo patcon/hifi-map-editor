@@ -1,0 +1,15 @@
+{
+  "name": "hifi-map-editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "serve": "^11.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "serve public/"
+  },
+  "author": "",
+  "license": "ISC"
+}
