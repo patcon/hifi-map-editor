@@ -27,6 +27,13 @@
 
 <body>
   <div id='map'></div>
+  <form>
+    <label for="mapJSON">mapJSON</label>
+    <br />
+    <textarea id="mapJSON" rows="4" cols="50"></textarea>
+    <br />
+    <input type="submit" value="Import">
+  </form>
   <script>
     // Custom CRS to invert Y-axis like HiFi does.
     // See: https://stackoverflow.com/a/62320569/504018
@@ -53,6 +60,9 @@
     };
 
     var bounds = [xy(0, 0), xy(43.00, 43.00)];
+    var mapUrl = 'https://hifi-json.s3.amazonaws.com/Speakeasy-BG-default-70m.jpg';
+    // TODO: Uncomment later when using remote images.
+    //var image = L.imageOverlay(mapUrl, bounds).addTo(map);
     var image = L.imageOverlay('Speakeasy-BG-default-70m.jpg', bounds).addTo(map);
 
     var redRoom     = xy(12.01, 27.30);
@@ -115,6 +125,39 @@
     map.on('layeradd', function (e) {
       if (e.layer instanceof L.Marker) e.layer.on('click', L.DomEvent.stop).on('click', deleteMarker, e.layer);
       if (e.layer instanceof L.Marker) e.layer.on('dblclick', L.DomEvent.stop).on('dblclick', e.layer.toggleEdit);
+    });
+
+    // Export mapJSON on each click of background map.
+    map.on('click', function (e) {
+      var mapJson = {
+        author: 'Patrick Connolly',
+        mapsJSONVersion: 'v1.1.0',
+        comments: 'A mapJSON file for testing the High Fidelity map editor',
+        maps: [
+          {
+            mapName: 'Default',
+            mapImageSrc: mapUrl,
+            mapLandmarks: [],
+          }
+        ]
+      };
+
+      map.eachLayer(function (l) {
+        if (l instanceof L.Marker) {
+          var data = {
+            name: l.getPopup() && l.getPopup().getContent(),
+            positionSU: {
+              x: l.getLatLng().lng,
+              y: l.getLatLng().lat,
+              z: 0,
+            },
+            radiusSU: 4,
+            hexColor: "#00000000",
+          };
+          mapJson.maps[0].mapLandmarks.push(data);
+        }
+      });
+      mapJSON.innerHTML = JSON.stringify(mapJson)
     });
   </script>
 </body>
