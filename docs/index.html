@@ -5,9 +5,10 @@
 	<title>High Fidelity - Map Editor</title>
 
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
@@ -19,21 +20,37 @@
 			margin: 0;
 		}
 		#map {
-			width: 600px;
+			width: 100%;
 			height: 400px;
 		}
+    textarea#mapJSON {
+      font-family: monospace;
+      height: 400px;
+    }
 	</style>
 </head>
 
 <body>
-  <div id='map'></div>
-  <form>
-    <label for="mapJSON">mapJSON</label>
-    <br />
-    <textarea id="mapJSON" rows="12" cols="72"></textarea>
-    <br />
-    <input type="submit" value="Import">
-  </form>
+  <h1>High Fidelity Map Editor</h1>
+  <main role="main">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="map">Map</label>
+          <div id="map"></div>
+        </div>
+        <div class="col-md-6">
+          <form>
+            <div class="form-group">
+              <label for="mapJSON">JSON</label>
+              <textarea class="form-control" id="mapJSON"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" disabled>Import</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
   <script>
     // Custom CRS to invert Y-axis like HiFi does.
     // See: https://stackoverflow.com/a/62320569/504018
@@ -58,7 +75,7 @@
       maxZoom: 6,
       minZoom: 3
     });
-    map.setView(xy(21.5, 21.5), 6);
+    map.setView(xy(21.5, 21.5), 5);
 
     var bounds = [xy(0, 0), xy(43.00, 43.00)];
     var mapUrl = 'https://hifi-json.s3.amazonaws.com/Speakeasy-BG-default-70m.jpg';
@@ -124,9 +141,9 @@
       if (e.layer instanceof L.Marker) e.layer.on('dblclick', L.DomEvent.stop).on('dblclick', e.layer.toggleEdit);
     });
 
-    // Export mapJSON on each click of background map or layer object.
-    map.on('click', updateMapJson);
+    // Export mapJSON on each click of layer object.
     map.on('editable:dragend', updateMapJson);
+    map.on('layeradd', updateMapJson);
 
     function roundDecimal(value, decimals=2) {
       return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -163,6 +180,7 @@
       });
       document.getElementById('mapJSON').value = JSON.stringify(mapJson, null, 2)
     }
+
     // Generate data on first load.
     updateMapJson();
   </script>
