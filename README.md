@@ -9,7 +9,8 @@ Fidelity's `mapJSON` annotation layer.
 - [x] Static background map with default HQ map.
 - [x] Allows placing of new ephemeral markers on map (no state saved).
 - [ ] Render map JSON during live-editing (export).
-- [ ] Support deleting markers.
+- [x] Support deleting markers. (ctrl/command-click)
+  - [ ] Tooltip on marker hover.
 - [ ] Allow state import from map JSON.
 - [ ] Use custom background image from URL.
 - [ ] Allow text to be specified.

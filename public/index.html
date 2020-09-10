@@ -59,10 +59,10 @@
     var couchIsland = xy(20.83, 16.74);
     var pianoBar    = xy(15.08, 15.99);
 
-    L.marker(    redRoom).addTo(map).bindPopup(    'Red Room');
+    L.marker(    redRoom).addTo(map).bindPopup('Red Room');
     L.marker(fancyDinner).addTo(map).bindPopup('Fancy Dinner');
     L.marker(couchIsland).addTo(map).bindPopup('Couch Island');
-    L.marker(   pianoBar).addTo(map).bindPopup(   'Piano Bar');
+    L.marker(   pianoBar).addTo(map).bindPopup('Piano Bar');
 
     var travel = L.polyline([redRoom, couchIsland]).addTo(map);
 
@@ -97,14 +97,24 @@
 
     L.NewMarkerControl = L.EditControl.extend({
       options: {
-          position: 'topleft',
-          callback: map.editTools.startMarker,
-          kind: 'marker',
-          html: '⚐'
+        position: 'topleft',
+        callback: map.editTools.startMarker,
+        kind: 'marker',
+        html: '⚐'
       }
     });
 
     map.addControl(new L.NewMarkerControl());
+
+    // Allow deletion of markers on ctrl/command click.
+    // Adapted from: http://leaflet.github.io/Leaflet.Editable/example/delete-shape.html
+    var deleteMarker = function (e) {
+      if ((e.originalEvent.ctrlKey || e.originalEvent.metaKey) && this.editEnabled()) map.removeLayer(this);
+    };
+    map.on('layeradd', function (e) {
+      if (e.layer instanceof L.Marker) e.layer.on('click', L.DomEvent.stop).on('click', deleteMarker, e.layer);
+      if (e.layer instanceof L.Marker) e.layer.on('dblclick', L.DomEvent.stop).on('dblclick', e.layer.toggleEdit);
+    });
   </script>
 </body>
 </html>
