@@ -3,7 +3,24 @@
 The purpose of this repo is to start experimenting with a map editor for High
 Fidelity's `mapJSON` annotation layer. 
 
-Currently, it simply displays some markers over a map background image.
+## Features
+
+- [x] Displays hardcoded marker positions with proper HiFi coordinates.
+- [x] Static background map with default HQ map.
+- [x] Allows placing of new ephemeral markers on map (no state saved).
+- [ ] Render map JSON during live-editing (export).
+- [ ] Support deleting markers.
+- [ ] Allow state import from map JSON.
+- [ ] Use custom background image from URL.
+- [ ] Allow text to be specified.
+- [ ] Allow circle shapes to be added.
+- [ ] Allow rectangular shapes to be added.
+- [ ] Allow state saving via localStorage.
+- [ ] Convert app to use React.
+- [ ] Support links (incl YouTube videos).
+- [ ] Support images as markers.
+- [ ] Support setting orientation.
+- [ ] Support simple invitations to specific coordinates.
 
 ## Usage
 
