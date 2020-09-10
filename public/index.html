@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
-	<title>CRS.Simple example - Leaflet</title>
+  <!-- Source: https://leafletjs.com/examples/crs-simple/crs-simple.html -->
+	<title>High Fidelity - Map Editor</title>
 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
 	<style>
 		html, body {
@@ -23,49 +22,48 @@
 			height: 400px;
 		}
 	</style>
-
-	
 </head>
+
 <body>
+  <div id='map'></div>
+  <script>
+    // Custom CRS to invert Y-axis like HiFi does.
+    // See: https://stackoverflow.com/a/62320569/504018
+    var CRSPixel = L.Util.extend(L.CRS.Simple, {
+      transformation: new L.Transformation(1,0,1,0)
+    });
 
-<div id='map'></div>
+    var map = L.map('map', {
+      crs: CRSPixel,
+      maxZoom: 7,
+      minZoom: 3
+    });
 
-<script>
+    var yx = L.latLng;
 
-	var map = L.map('map', {
-		crs: L.CRS.Simple,
-		minZoom: -3
-	});
+    var xy = function(x, y) {
+      if (L.Util.isArray(x)) {    // When doing xy([x, y]);
+        return yx(x[1], x[0]);
+      }
+      return yx(y, x);  // When doing xy(x, y);
+    };
 
-	var yx = L.latLng;
+    var bounds = [xy(0, 0), xy(43.00, 43.00)];
+    var image = L.imageOverlay('Speakeasy-BG-default-70m.jpg', bounds).addTo(map);
 
-	var xy = function(x, y) {
-		if (L.Util.isArray(x)) {    // When doing xy([x, y]);
-			return yx(x[1], x[0]);
-		}
-		return yx(y, x);  // When doing xy(x, y);
-	};
+    var redRoom     = xy(12.01, 27.30);
+    var fancyDinner = xy(25.02, 34.57);
+    var couchIsland = xy(20.83, 16.74);
+    var pianoBar    = xy(15.08, 15.99);
 
-	var bounds = [xy(-25, -26.5), xy(1023, 1021.5)];
-	var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
+    L.marker(    redRoom).addTo(map).bindPopup(    'Red Room');
+    L.marker(fancyDinner).addTo(map).bindPopup('Fancy Dinner');
+    L.marker(couchIsland).addTo(map).bindPopup('Couch Island');
+    L.marker(   pianoBar).addTo(map).bindPopup(   'Piano Bar');
 
-	var sol      = xy(175.2, 145.0);
-	var mizar    = xy( 41.6, 130.1);
-	var kruegerZ = xy( 13.4,  56.5);
-	var deneb    = xy(218.7,   8.3);
+    var travel = L.polyline([redRoom, couchIsland]).addTo(map);
 
-	L.marker(     sol).addTo(map).bindPopup(      'Sol');
-	L.marker(   mizar).addTo(map).bindPopup(    'Mizar');
-	L.marker(kruegerZ).addTo(map).bindPopup('Krueger-Z');
-	L.marker(   deneb).addTo(map).bindPopup(    'Deneb');
-
-	var travel = L.polyline([sol, deneb]).addTo(map);
-
-	map.setView(xy(120, 70), 1);
-
-</script>
-
-
-
+    map.setView(xy(21.5, 21.5), 6);
+  </script>
 </body>
 </html>
