@@ -132,7 +132,7 @@
       return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
     }
 
-    function updateMapJson (event) {
+    function updateMapJson () {
       var mapJson = {
         author: 'Patrick Connolly',
         mapsJSONVersion: 'v1.1.0',
@@ -163,6 +163,8 @@
       });
       document.getElementById('mapJSON').value = JSON.stringify(mapJson)
     }
+    // Generate data on first load.
+    updateMapJson();
   </script>
 </body>
 </html>

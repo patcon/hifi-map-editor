@@ -23,6 +23,7 @@ Fidelity's `mapJSON` annotation layer.
 - [ ] Support images as markers.
 - [ ] Support setting orientation.
 - [ ] Support simple invitations to specific coordinates.
+- [ ] Pretty-print the mapJSON export.
 
 ## Usage
 
