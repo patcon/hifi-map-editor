@@ -127,8 +127,15 @@
       if (e.layer instanceof L.Marker) e.layer.on('dblclick', L.DomEvent.stop).on('dblclick', e.layer.toggleEdit);
     });
 
-    // Export mapJSON on each click of background map.
-    map.on('click', function (e) {
+    // Export mapJSON on each click of background map or layer object.
+    map.on('click', updateMapJson);
+    map.on('editable:dragend', updateMapJson);
+
+    function roundDecimal(value, decimals=2) {
+      return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    }
+
+    function updateMapJson (event) {
       var mapJson = {
         author: 'Patrick Connolly',
         mapsJSONVersion: 'v1.1.0',
@@ -147,8 +154,8 @@
           var data = {
             name: l.getPopup() && l.getPopup().getContent(),
             positionSU: {
-              x: l.getLatLng().lng,
-              y: l.getLatLng().lat,
+              x: roundDecimal(l.getLatLng().lng),
+              y: roundDecimal(l.getLatLng().lat),
               z: 0,
             },
             radiusSU: 4,
@@ -158,7 +165,7 @@
         }
       });
       mapJSON.innerHTML = JSON.stringify(mapJson)
-    });
+    }
   </script>
 </body>
 </html>
