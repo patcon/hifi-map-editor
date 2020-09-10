@@ -30,7 +30,7 @@
   <form>
     <label for="mapJSON">mapJSON</label>
     <br />
-    <textarea id="mapJSON" rows="4" cols="50"></textarea>
+    <textarea id="mapJSON" rows="12" cols="72"></textarea>
     <br />
     <input type="submit" value="Import">
   </form>
@@ -161,7 +161,7 @@
           mapJson.maps[0].mapLandmarks.push(data);
         }
       });
-      mapJSON.innerHTML = JSON.stringify(mapJson)
+      document.getElementById('mapJSON').value = JSON.stringify(mapJson)
     }
   </script>
 </body>
