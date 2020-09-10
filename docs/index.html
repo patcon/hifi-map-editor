@@ -161,7 +161,7 @@
           mapJson.maps[0].mapLandmarks.push(data);
         }
       });
-      document.getElementById('mapJSON').value = JSON.stringify(mapJson)
+      document.getElementById('mapJSON').value = JSON.stringify(mapJson, null, 2)
     }
     // Generate data on first load.
     updateMapJson();
