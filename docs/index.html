@@ -97,13 +97,22 @@
     var pianoBarXY    = xy(15.08, 15.99);
     var couchIslandXY = xy(20.83, 16.74);
 
+    function makePopupForm (text) {
+      var formEl = document.createElement('form');
+      var inputEl = document.createElement('input');
+      inputEl.setAttribute('type', 'text');
+      inputEl.setAttribute('value', text);
+      formEl.appendChild(inputEl);
+      return formEl;
+    }
+
     // couchIsland is the most likely marker to be experimentally editted from
     // default zoom bounds. This order ensures it shows at top of mapJSON, and changes
     // in XY are visible as it's moved around.
-    L.marker(fancyDinnerXY).addTo(map).bindPopup('Fancy Dinner').enableEdit();
-    L.marker(    redRoomXY).addTo(map).bindPopup('Red Room').enableEdit();
-    L.marker(   pianoBarXY).addTo(map).bindPopup('Piano Bar').enableEdit();
-    L.marker(couchIslandXY).addTo(map).bindPopup('Couch Island').enableEdit();
+    L.marker(fancyDinnerXY).addTo(map).bindPopup(makePopupForm('Fancy Dinner').outerHTML).enableEdit();
+    L.marker(    redRoomXY).addTo(map).bindPopup(makePopupForm('Red Room').outerHTML).enableEdit();
+    L.marker(   pianoBarXY).addTo(map).bindPopup(makePopupForm('Piano Bar').outerHTML).enableEdit();
+    L.marker(couchIslandXY).addTo(map).bindPopup(makePopupForm('Couch Island').outerHTML).enableEdit();
 
     // Add map editor controls.
     // Source: http://leaflet.github.io/Leaflet.Editable/example/index.html
@@ -178,8 +187,10 @@
 
       map.eachLayer(function (l) {
         if (l instanceof L.Marker) {
+          var el = document.createElement('div');
+          el.innerHTML = l.getPopup() && l.getPopup().getContent();
           var data = {
-            name: l.getPopup() && l.getPopup().getContent(),
+            name: el.querySelector('input') && el.querySelector('input').value,
             positionSU: {
               x: roundDecimal(l.getLatLng().lng),
               y: roundDecimal(l.getLatLng().lat),
