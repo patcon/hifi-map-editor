@@ -92,15 +92,18 @@
     //var image = L.imageOverlay(mapUrl, bounds).addTo(map);
     var image = L.imageOverlay('Speakeasy-BG-default-70m.jpg?', bounds).addTo(map);
 
-    var couchIslandXY = xy(20.83, 16.74);
-    var pianoBarXY    = xy(15.08, 15.99);
-    var redRoomXY     = xy(12.01, 27.30);
     var fancyDinnerXY = xy(25.02, 34.57);
+    var redRoomXY     = xy(12.01, 27.30);
+    var pianoBarXY    = xy(15.08, 15.99);
+    var couchIslandXY = xy(20.83, 16.74);
 
-    L.marker(couchIslandXY).addTo(map).bindPopup('Couch Island').enableEdit();
-    L.marker(   pianoBarXY).addTo(map).bindPopup('Piano Bar').enableEdit();
-    L.marker(    redRoomXY).addTo(map).bindPopup('Red Room').enableEdit();
+    // couchIsland is the most likely marker to be experimentally editted from
+    // default zoom bounds. This order ensures it shows at top of mapJSON, and changes
+    // in XY are visible as it's moved around.
     L.marker(fancyDinnerXY).addTo(map).bindPopup('Fancy Dinner').enableEdit();
+    L.marker(    redRoomXY).addTo(map).bindPopup('Red Room').enableEdit();
+    L.marker(   pianoBarXY).addTo(map).bindPopup('Piano Bar').enableEdit();
+    L.marker(couchIslandXY).addTo(map).bindPopup('Couch Island').enableEdit();
 
     // Add map editor controls.
     // Source: http://leaflet.github.io/Leaflet.Editable/example/index.html
@@ -185,6 +188,8 @@
             radiusSU: 4,
             hexColor: "#00000000",
           };
+          // Using unshift instead of push ensures new markers get added to top
+          // of list and change is visible to user.
           mapJson.maps[0].mapLandmarks.unshift(data);
         }
       });
