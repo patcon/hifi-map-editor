@@ -184,7 +184,7 @@
             radiusSU: 4,
             hexColor: "#00000000",
           };
-          mapJson.maps[0].mapLandmarks.push(data);
+          mapJson.maps[0].mapLandmarks.unshift(data);
         }
       });
       document.getElementById('mapJSON').value = JSON.stringify(mapJson, null, 2)
