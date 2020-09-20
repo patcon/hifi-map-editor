@@ -20,10 +20,11 @@ Fidelity's `mapJSON` annotation layer.
 - [ ] Allow state saving via localStorage.
 - [ ] Convert app to use React.
 - [ ] Support links (incl YouTube videos).
-- [ ] Support images as markers.
-- [ ] Support setting orientation.
+- [ ] Support images at markers
+    - [ ] Support setting orientation.
+    - [ ] Support visual image placement and scaling [`#1`](https://github.com/patcon/hifi-map-editor/issues/1)
 - [ ] Support simple invitations to specific coordinates.
-- [ ] Pretty-print the mapJSON export.
+- [x] Pretty-print the mapJSON export.
 
 ## Usage
 
